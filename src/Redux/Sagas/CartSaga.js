@@ -1,7 +1,6 @@
 import {
   put,
   takeEvery,
-  all,
   takeLatest,
 } from 'redux-saga/effects'
 import {
@@ -34,7 +33,7 @@ export function* removeFromCartSaga(action) {
   let hardCopy = [...cart]
   hardCopy = hardCopy.filter((cartItem) => cartItem.id !== item.id)
   const newTotal = total(hardCopy) 
-  yield put({ type: REMOVE_FROM_CART, payload: { hardCopy, newTotal } })
+  yield put({ type: REMOVE_FROM_CART, payload: { newCart: hardCopy, newTotal } })
 }
 
 export function* watchAddToCartSaga() {

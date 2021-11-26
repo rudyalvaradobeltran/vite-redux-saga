@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addToCartAction, removeFromCartAction } from '../Redux/Actions/CartActions'
 import { setAlertAction } from '../Redux/Actions/AlertActions'
-import { findEmployee, findCustomer } from '../Redux/Actions/UserActions'
+import { findUsers } from '../Redux/Actions/UserActions'
 import { Items } from './ShopItems'
 
 const Shop = () => {
@@ -45,34 +45,25 @@ const Shop = () => {
     </div>
   ))
 
-  const callForEmployee = () => {
-    dispatch(findEmployee())
-  }
-
-  const callForCustomer = () => {
-    dispatch(findCustomer())
+  const callForUsers = () => {
+    dispatch(findUsers())
   }
 
   return (
     <div>
       STORE
+      <input
+        type="submit"
+        value="Find users"
+        onClick={() => callForUsers()}
+      />
       <div>
         Employee name: { employeeFirstName }
-        <input
-          type="submit"
-          value="Find employee"
-          onClick={() => callForEmployee()}
-        />
       </div>
       <div>{listItems}</div>
       <div>CART</div>
       <div>
         Customer name: { customerFirstName }
-        <input
-          type="submit"
-          value="Find customer"
-          onClick={() => callForCustomer()}
-        />
       </div>
       <div>{cartItems}</div>
       <div>Total: ${cartTotal}</div>

@@ -1,33 +1,27 @@
-import { put, takeEvery, call, all, race } from 'redux-saga/effects'
-import {
-  FIND_EMPLOYEE_SAGA,
-  FIND_EMPLOYEE,
-  FIND_CUSTOMER_SAGA,
-  FIND_CUSTOMER,
-} from '../Types'
+import { put, takeEvery, call, all } from 'redux-saga/effects'
+import { FIND_EMPLOYEE, FIND_CUSTOMER, FIND_USERS_SAGA } from '../Types'
 
-export function* findEmployeeSaga() {
+export function* findUsers() {
   const url = 'https://randomuser.me/api/'
   const setHeaders = { headers: { 'Content-Type': 'application/json' } }
-  let res = yield fetch(url, { setHeaders })
-  res = yield res.json()
-  let employee = res.results[0]
-  yield put({ type: FIND_EMPLOYEE, payload: employee })
+  let [employeeFinder, customerFinder] = yield all([
+    call(fetch, url, setHeaders),
+    call(fetch, url, setHeaders)
+  ]);
+  [employeeFinder, customerFinder] = yield all([
+    employeeFinder.json(),
+    customerFinder.json()
+  ]);
+  [employeeFinder, customerFinder] = yield all([
+    employeeFinder.results[0],
+    customerFinder.results[0]
+  ]);
+  yield all([
+    put({ type: FIND_EMPLOYEE, payload: employeeFinder }),
+    put({ type: FIND_CUSTOMER, payload: customerFinder })
+  ])
 }
 
-export function* findCustomerSaga() {
-  const url = 'https://randomuser.me/api/'
-  const setHeaders = { headers: { 'Content-Type': 'application/json' } }
-  let res = yield fetch(url, { setHeaders })
-  res = yield res.json()
-  let customer = res.results[0]
-  yield put({ type: FIND_CUSTOMER, payload: customer })
-}
-
-export function* watchFindEmployeeSaga() {
-  yield takeEvery(FIND_EMPLOYEE_SAGA, findEmployeeSaga)
-}
-
-export function* watchFindCustomerSaga() {
-  yield takeEvery(FIND_CUSTOMER_SAGA, findCustomerSaga)
+export function* watchFindUsersSaga() {
+  yield takeEvery(FIND_USERS_SAGA, findUsers)
 }
